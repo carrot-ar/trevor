@@ -22,7 +22,7 @@ class Cli
       number_of_clients(parser)
       request_rate(parser)
       run_length(parser)
-      host(parser)
+      carrot_host(parser)
       
       # Tail options, aren't arguments but they change the output
       parser.on_tail("-h", "--help", "Show this message") do
@@ -39,23 +39,23 @@ class Cli
     # sets the number of clients to connect to carrot server
     def number_of_clients(parser)
       parser.on("-c", "--clients N", Integer, "Connect N clients to the carrot server") do |clients|
-        self.clients = clients
+        self.clients = clients.to_i
       end
     end
 
     def request_rate(parser)
       parser.on("-r", "--rate N", Integer, "Have clients send requests at a rate of N req/sec") do |rate|
-        self.rate = rate
+        self.rate = rate.to_i
       end
     end
 
     def run_length(parser)
       parser.on("-t", "--time N", Integer, "Send/Receive requests for N seconds") do |time|
-        self.time = time
+        self.time = time.to_i
       end
     end
 
-    def host(parser)
+    def carrot_host(parser)
       parser.on("-h", "--host [HOST]", String, "Set the host for which to send requests to") do |host|
         self.host = host
       end
