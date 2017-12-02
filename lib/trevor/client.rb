@@ -9,6 +9,7 @@ class Client
   end
 
   def run 
+    puts host
     ws = WebSocket::EventMachine::Client.connect(:uri => @host)
     
     EM.run do 
