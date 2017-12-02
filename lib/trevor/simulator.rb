@@ -14,5 +14,7 @@ class Simulator
         client.run
       end
     end
+
+    @clients.each(&:join)
   end
 end
