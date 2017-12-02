@@ -8,15 +8,13 @@ class Simulator
     @options = options
     @client_count = options.clients
     @clients = []    
-    client = Client.new(@options)
-    client.run
-    #@client_count.times do |i|
-    #  @clients << Thread.new do
-    #    client = Client.new(@options)
-    #    client.run
-    #  end
-    #end
+    @client_count.times do |i|
+      @clients << Thread.new do
+        client = Client.new(@options)
+        client.run
+      end
+    end
 
-    #@clients.each(&:join)
+    @clients.each(&:join)
   end
 end
