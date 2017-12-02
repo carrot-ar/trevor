@@ -16,19 +16,19 @@ class Client
       ws = WebSocket::EventMachine::Client.connect(:uri => @host)
       
       ws.onopen do
-       
+        puts "Connected"
       end 
       
       ws.onmessage do |msg, type|
-
+        puts "Received message: #{msg}"
       end
 
       ws.onclose do |code, reason|
-
+        puts "Disconnected with code: #{code}"
       end
 
       EventMachine.next_tick do
-        ws.send "test"
+        #ws.send "Hello, world!"
       end
     end
   end
