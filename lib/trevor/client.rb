@@ -10,9 +10,11 @@ class Client
 
   def run 
     puts host
-    ws = WebSocket::EventMachine::Client.connect(:uri => @host)
     
     EM.run do 
+      
+      ws = WebSocket::EventMachine::Client.connect(:uri => @host)
+      
       ws.onopen do
        
       end 
