@@ -1,4 +1,4 @@
-require 'state_machine'
+require 'websocket-eventmachine-client'
 
 class Client
   attr_accessor :ws, :host, :rate, :time
