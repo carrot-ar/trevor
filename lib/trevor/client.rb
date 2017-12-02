@@ -6,20 +6,21 @@ class Client
      @host = options.host
      @rate = options.rate 
      @time = options.time
-     @ws   = WebSocket::EventMachine::Client.connect(:uri => @host)
   end
 
   def run 
+    ws = WebSocket::EventMachine::Client.connect(:uri => @host)
+    
     EM.run do 
-      @ws.onopen do
+      ws.onopen do
        
       end 
       
-      @ws.onmessage do |msg, type|
+      ws.onmessage do |msg, type|
 
       end
 
-      @ws.onclose do |code, reason|
+      ws.onclose do |code, reason|
 
       end
 
