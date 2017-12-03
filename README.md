@@ -1,6 +1,6 @@
-# Carrot Simulator
+# Trevor
 
-Welcome to the Carrot simulator! This simulator is a CLI tool to simulate mobile devices connecting to and running on the Carrot framework. 
+Welcome to the Trevor, the Carrot simulator! This simulator is a CLI tool to simulate mobile devices connecting to and running on the Carrot framework. 
 
 ## Installation
 
