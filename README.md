@@ -9,9 +9,13 @@ Run `gem install carrot-sim`
 ## Usage
 
 There are several commands currently available:
+
 `-c` `--clients N` Connect N clients to the carrot server
+
 `-r` `--rate N` Send N requests per second to the server
+
 `-t` `--time N` Run each client for N seconds
+
 `-h` `--host` Sets the host to point clients to
 
 
