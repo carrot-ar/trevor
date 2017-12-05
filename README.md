@@ -1,6 +1,6 @@
-# Carrot Simulator
+# Trevor
 
-Welcome to the Carrot simulator! This simulator is a CLI tool to simulate mobile devices connecting to and running on the Carrot framework. 
+Welcome to the Trevor, the Carrot simulator! This simulator is a CLI tool to simulate mobile devices connecting to and running on the Carrot framework. 
 
 ## Installation
 
@@ -9,9 +9,13 @@ Run `gem install carrot-sim`
 ## Usage
 
 There are several commands currently available:
+
 `-c` `--clients N` Connect N clients to the carrot server
+
 `-r` `--rate N` Send N requests per second to the server
+
 `-t` `--time N` Run each client for N seconds
+
 `-h` `--host` Sets the host to point clients to
 
 
