@@ -45,6 +45,8 @@ class Client
       inject_session_tokens
       resolve_primary_token(message)
 
+      # we should be making sure that the ack process works correctly
+      # for primary and non primary devices
       #if !primary?
       #  ack_handshake_received
       #end
