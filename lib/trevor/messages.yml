@@ -1,0 +1,21 @@
+---
+carrot_transform:
+    data:
+      session_token: "AAAAAAA-BBBB-CCCC-DDDD-DDDDDDDDDDDD"
+      endpoint: "carrot_transform"
+      payload:
+        offset:
+          x: 0
+          y: 0
+          z: 0
+default_message:
+    data:
+      session_token: "AAAAAAA-BBBB-CCCC-DDDD-DDDDDDDDDDDD"
+      endpoint: "echo"
+      payload:
+        offset:
+          x: 0
+          y: 0
+          z: 0
+        params:
+          foo: "bar"

@@ -3,7 +3,6 @@ class Simulator
 
   # spawn some threads or something and handle clients
 
-
   def initialize options
     @options = options
     @client_count = options.clients

@@ -7,7 +7,15 @@ require_relative 'runner.rb'
 class Client
   include Observer
 
-  attr_accessor :session_token, :runner, :ws, :host, :initialized, :connected, :rate, :time
+  attr_accessor :session_token,
+                :runner,
+                :ws,
+                :host,
+                :initialized,
+                :connected,
+                :rate,
+                :time,
+                :messages
 
   def initialize options
     super
@@ -17,10 +25,11 @@ class Client
     @connected = false
     @initialized = false
     @session_token = ""
+    @messages = options.messages
     @runner = Runner.new
 
-    add(self)
     add(@runner)
+
     # begin the timeout thread
     Thread.new do
       sleep(time)
@@ -28,49 +37,55 @@ class Client
     end
   end
 
-  def acknowledge
+  def handle_handshake msg
+    message = JSON.parse("#{msg}")
 
-    puts
+    if message["endpoint"] == "carrot_beacon"
+      @session_token = message["session_token"]
+      inject_session_tokens
+      resolve_primary_token(message)
 
+      #if !primary?
+      #  ack_handshake_received
+      #end
+
+      ack_handshake_received
+
+      @initialized = true
+
+      notify
+    else
+      puts JSON.pretty_generate(JSON.parse("#{msg}"))
+      raise ArgumentError.new("Received endpoint was not carrot_beacon")
+    end
+  end
+
+  def primary?
+    @sesssion_token == @primary_token
+  end
+
+  def resolve_primary_token message
+    @primary_token = message["payload"]["params"]["uuid"].to_s
+  end
+
+  def inject_session_tokens
+    set_message_token
+    @runner.session_token = @session_token
+    @runner.message = @messages[:default_message]
+  end
+
+  def ack_handshake_received
     puts "ACK: Calling carrot_transform"
-
-    json = "{ \"session_token\": \"#{@session_token}\", \"endpoint\": \"carrot_transform\", \"payload\": { \"offset\": { \"x\": 0, \"y\": 0, \"z\": 0 } } }"
+    json = @messages["carrot_transform"]["data"].to_json
     # send the acknowledgement message here
     puts "Content: "
     puts "  #{JSON.pretty_generate(JSON.parse(json))}"
     @ws.send json
-
-    puts
   end
 
-  def receive_handshake msg
-    message = JSON.parse("#{msg}")
-    unless @initialized && message["endpoint"] == "carrot_beacon"
-      is_primary = false
-      puts
-      puts JSON.pretty_generate(message)
-      puts
-      puts "Processing handshake signal"
-      #puts handshakeHash
-      @session_token = message["session_token"].to_s
-      @runner.session_token = @session_token
-      @primary_id = message["payload"]["params"]["uuid"].to_s
-      if @sesssion_token == @primary_id
-        puts "We are the primary"
-        is_primary = true
-        @offset = { "x" => 1, "y" => 0, "z" => 0 }
-      end
-      puts "Am I the primamry? #{is_primary}"
-      @connected = true
-      @initialized = true
-      puts " -- Session token: #{@session_token}"
-      puts " -- Connected: #{@connected}"
-      puts " -- Initialized: #{@initialized}"
-      notify
-      puts "Handshake Completed"
-    else
-      puts JSON.pretty_generate(JSON.parse("#{msg}"))
-    end
+  def set_message_token
+    @messages["carrot_transform"]["data"]["session_token"] = @session_token
+    @messages["default_message"]["data"]["session_token"] = @session_token
   end
 
   def run
@@ -86,10 +101,8 @@ class Client
       end
 
       @ws.onmessage do |msg, type|
-        begin
-          receive_handshake msg
-        rescue
-          puts "Could not find method"
+        if !@initialized
+          handle_handshake msg
         end
       end
 

@@ -1,13 +1,14 @@
 require 'optparse'
 require 'pp'
 require 'ostruct'
+require 'yaml'
 
-class Cli 
+class Cli
   attr_reader :parser, :options
-  
+
   class Options
-    attr_accessor :verbose, :clients, :rate, :time, :host
-    
+    attr_accessor :verbose, :clients, :rate, :time, :host, :messages
+
     def initialize
       self.verbose = false
       self.host = "http://localhost:8080/ws"
@@ -23,7 +24,8 @@ class Cli
       request_rate(parser)
       run_length(parser)
       carrot_host(parser)
-      
+      message_bank(parser)
+
       # Tail options, aren't arguments but they change the output
       parser.on_tail("-h", "--help", "Show this message") do
         puts parser
@@ -35,7 +37,7 @@ class Cli
         exit
       end
     end
-    
+
     # sets the number of clients to connect to carrot server
     def number_of_clients(parser)
       parser.on("-c", "--clients N", Integer, "Connect N clients to the carrot server") do |clients|
@@ -58,6 +60,16 @@ class Cli
     def carrot_host(parser)
       parser.on("-h", "--host [HOST]", String, "Set the host for which to send requests to") do |host|
         self.host = host
+      end
+    end
+
+    def message_bank(parser)
+      parser.on("-d", "--data [FILE NAME]", String, "Choose the file to load predefined messages from. Defaults to messages.yml.") do |msgs|
+        self.messages = YAML.load_file(msgs)
+      end
+
+      if self.messages == nil
+        self.messages = YAML::load_file(File.join(__dir__, 'messages.yml'))
       end
     end
   end
