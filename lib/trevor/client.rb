@@ -57,14 +57,14 @@ class Client
       sleep 3
       notify
     else
-      puts JSON.pretty_generate(JSON.parse("#{msg}"))
+      # puts JSON.pretty_generate(JSON.parse("#{msg}"))
       raise ArgumentError.new("Received endpoint was not carrot_beacon")
     end
   end
 
   def primary?
-    puts "#{@session_token} == #{@primary_token}"
-    puts @session_token == @primary_token
+    # puts "#{@session_token} == #{@primary_token}"
+    # puts @session_token == @primary_token
     @session_token == @primary_token 
   end
 
@@ -79,11 +79,11 @@ class Client
   end
 
   def ack_handshake_received
-    puts "ACK: Calling carrot_transform"
+    # puts "ACK: Calling carrot_transform"
     json = @messages["carrot_transform"]["data"].to_json
     # send the acknowledgement message here
-    puts "Content: "
-    puts "  #{JSON.pretty_generate(JSON.parse(json))}"
+    # puts "Content: "
+    # puts "  #{JSON.pretty_generate(JSON.parse(json))}"
     @ws.send json
   end
 
@@ -94,14 +94,14 @@ class Client
 
   def run
     @count = 0
-    puts "Running client... "
+    # puts "Running client... "
 
     print "Connecting to #{host} \n"
     EM.run do
       @ws = WebSocket::EventMachine::Client.connect(:uri => @host)
       @runner.ws = @ws
       @ws.onopen do
-        puts "Connected"
+        # puts "Connected"
         @connected = true
       end
 
@@ -111,22 +111,22 @@ class Client
         end
         
         message = JSON.parse(msg)
-        puts message 
-        puts "Session #{@session_token} is the primary: #{primary?}"
+        # puts message 
+        # puts "Session #{@session_token} is the primary: #{primary?}"
         if message["endpoint"] == "carrot_transform" && primary? 
           json = "{ \"session_token\": \"#{@session_token}\", \"endpoint\": \"carrot_transform\", \"payload\": { \"offset\": { \"x\": 1, \"y\": 1, \"z\": 1 } } }"
           @ws.send json
-          puts "Providing primary coordinates to the server!"
-          puts JSON.pretty_generate(JSON.parse(msg))
+          # puts "Providing primary coordinates to the server!"
+          # puts JSON.pretty_generate(JSON.parse(msg))
         end
 
-        #puts JSON.pretty_generate(JSON.parse(msg))
+        ## puts JSON.pretty_generate(JSON.parse(msg))
         @count += 1
-        puts "Receive Count #{@count}"
+        # puts "Receive Count #{@count}"
       end
 
       @ws.onclose do |code, reason|
-        puts "Disconnected with code: #{code}"
+        # puts "Disconnected with code: #{code}"
       end
     end
   end

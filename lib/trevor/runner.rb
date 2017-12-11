@@ -30,7 +30,7 @@ class Runner
         #puts "Sending: "
         #puts " -- #{JSON.pretty_generate(JSON.parse(json))}"
         @count += 1
-        puts "Sent Count #{@count}"
+        #puts "Sent Count #{@count}"
 
         @ws.send json
         #ws.send "Hello, world!"
