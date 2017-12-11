@@ -23,6 +23,8 @@ class Simulator
       }
 
       @clients << pid
+      puts "#{pid} started."
+      sleep 0.5
     end
 #=end
 

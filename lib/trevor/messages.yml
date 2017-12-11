@@ -11,7 +11,7 @@ carrot_transform:
 default_message:
     data:
       session_token: "AAAAAAA-BBBB-CCCC-DDDD-DDDDDDDDDDDD"
-      endpoint: "echo"
+      endpoint: "echoSimple"
       payload:
         offset:
           x: 0

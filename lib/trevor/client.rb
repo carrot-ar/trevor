@@ -54,7 +54,7 @@ class Client
       ack_handshake_received
 
       @initialized = true
-
+      sleep 3
       notify
     else
       puts JSON.pretty_generate(JSON.parse("#{msg}"))
@@ -63,7 +63,9 @@ class Client
   end
 
   def primary?
-    @sesssion_token == @primary_token
+    puts "#{@session_token} == #{@primary_token}"
+    puts @session_token == @primary_token
+    @session_token == @primary_token 
   end
 
   def resolve_primary_token message
@@ -91,6 +93,7 @@ class Client
   end
 
   def run
+    @count = 0
     puts "Running client... "
 
     print "Connecting to #{host} \n"
@@ -106,6 +109,20 @@ class Client
         if !@initialized
           handle_handshake msg
         end
+        
+        message = JSON.parse(msg)
+        puts message 
+        puts "Session #{@session_token} is the primary: #{primary?}"
+        if message["endpoint"] == "carrot_transform" && primary? 
+          json = "{ \"session_token\": \"#{@session_token}\", \"endpoint\": \"carrot_transform\", \"payload\": { \"offset\": { \"x\": 1, \"y\": 1, \"z\": 1 } } }"
+          @ws.send json
+          puts "Providing primary coordinates to the server!"
+          puts JSON.pretty_generate(JSON.parse(msg))
+        end
+
+        #puts JSON.pretty_generate(JSON.parse(msg))
+        @count += 1
+        puts "Receive Count #{@count}"
       end
 
       @ws.onclose do |code, reason|
